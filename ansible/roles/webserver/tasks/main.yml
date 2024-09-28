@@ -1,0 +1,22 @@
+---
+- name: Create Nginx Deployment
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', 'nginx-deployment.yaml.j2') }}"
+
+- name: Create Nginx Service
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: nginx-service
+      spec:
+        selector:
+          app: nginx
+        ports:
+          - protocol: TCP
+            port: 80
+            targetPort: 80
+        type: NodePort
